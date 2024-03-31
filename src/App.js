@@ -1,7 +1,7 @@
 import "./App.css";
 import DataTable from "./components/dataTable";
 import Paper from "@mui/material/Paper";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { IconButton } from "@mui/material";
 import { GridAddIcon } from "@mui/x-data-grid";
 import { Person } from "@mui/icons-material";
