@@ -24,15 +24,15 @@ const columns = [
 ];
 
 const rows = [
-  { id: 1, name: "Jon", age: 35, cost: 250 },
-  { id: 2, name: "Cersei", age: 42, cost: 250 },
-  { id: 3, name: "Jaime", age: 45, cost: 250 },
-  { id: 4, name: "Arya", age: 16, cost: 250 },
-  { id: 5, name: "Daenerys", age: null, cost: 250 },
-  { id: 6, name: null, age: 150, cost: 250 },
-  { id: 7, name: "Ferrara", age: 44, cost: 250 },
-  { id: 8, name: "Rossini", age: 36, cost: 250 },
-  { id: 9, name: "Harvey", age: 65, cost: 250 },
+  { id: 1,name: "GCS" ,owner: "Jon", age: 5, cost: 750 },
+  { id: 2,name: "GCS" ,owner: "Cersei", age: 2, cost: 250 },
+  { id: 3,name: "GCS" ,owner: "Jaime", age: 4, cost: 250 },
+  { id: 4,name: "GCS" ,owner: "Arya", age: 6, cost: 450 },
+  { id: 5,name: "GCS" ,owner: "Daenerys", age: null, cost: 150 },
+  { id: 6,name: "GCS" ,owner: null, age: 1, cost: 50 },
+  { id: 7,name: "GCS" ,owner: "Ferrara", age: 4, cost: 550 },
+  { id: 8,name: "GCS" ,owner: "Rossini", age: 6, cost: 650 },
+  { id: 9,name: "GCS" ,owner: "Harvey", age: 3, cost: 350 },
 ];
 
 function DataTable() {
@@ -40,7 +40,7 @@ function DataTable() {
     <div
       style={{
         height: 400,
-        width: "auto",
+        width: "100%",
         display: "flex",
         flexDirection:"column",
         alignItems: "start",

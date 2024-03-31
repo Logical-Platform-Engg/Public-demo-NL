@@ -7,12 +7,12 @@ import { GridAddIcon } from "@mui/x-data-grid";
 import { Person } from "@mui/icons-material";
 import * as React from "react";
 import SimpleDialog from "./components/dialog";
+import SearchComponent from "./components/SearchComponent";
 
 function App() {
-  const emails = ["username@gmail.com", "user02@gmail.com"];
-
   const [open, setOpen] = React.useState(false);
-  const [selectedValue, setSelectedValue] = React.useState(emails[1]);
+  const [selectedValue, setSelectedValue] = React.useState();
+  const [isTableVisible, setIsTableVisible] = React.useState(true);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -21,6 +21,7 @@ function App() {
   const handleClose = (value) => {
     setOpen(false);
     setSelectedValue(value);
+    setIsTableVisible(false);
   };
 
   return (
@@ -32,16 +33,12 @@ function App() {
             width: "100%",
             alignItems: "center",
             justifyContent: "center",
-            marginY: 2,
           }}
         >
           <Box
             sx={{
-              height: "fit-content",
-              width: "fit-content",
               flex: 1,
               borderRadius: 0,
-
               display: "flex",
               alignItems: "center",
               justifyContent: "flex-start",
@@ -79,62 +76,73 @@ function App() {
           </Paper>
           <Box sx={{ flex: 1 }}></Box>
         </Box>
-
-        <Box
-          sx={{
-            display: "flex",
-            width: "auto",
-            alignItems: "center",
-            justifyContent: "center",
-            marginY: 2,
-          }}
-        >
-          <Paper
-            elevation={1}
-            sx={{
-              height: 20,
-              width: 100,
-              marginRight: 2,
-              padding: 1,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              fontSize: "calc(1px + 2vmin)",
-            }}
-          >
-            Sandbox
-          </Paper>
-          <IconButton
-            color="primary"
-            aria-label="Add Sandbox"
-            sx={{
-              height: "fit-content",
-            }}
-            onClick={handleClickOpen}
-          >
-            <Paper
-              elevation={3}
+        {isTableVisible ? (
+          <Box sx={{
+            height:"100%",
+            width:"100%",
+            display:"flex",
+            flexDirection:"column",
+            alignItems:"start",
+            justifyContent:"end"
+          }}>
+            <Box
               sx={{
-                borderRadius: "50%",
-                height: 20,
-                width: 20,
-                padding: 1,
                 display: "flex",
+                width: "auto",
                 alignItems: "center",
                 justifyContent: "center",
+                marginY: 2,
               }}
             >
-              <GridAddIcon />
-            </Paper>
-          </IconButton>
-          <SimpleDialog
-            selectedValue={selectedValue}
-            open={open}
-            onClose={handleClose}
-          />
-        </Box>
-
-        <DataTable />
+              <Paper
+                elevation={1}
+                sx={{
+                  height: 20,
+                  width: 100,
+                  marginRight: 2,
+                  padding: 1,
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  fontSize: "calc(1px + 2vmin)",
+                }}
+              >
+                Sandbox
+              </Paper>
+              <IconButton
+                color="primary"
+                aria-label="Add Sandbox"
+                sx={{
+                  height: "fit-content",
+                }}
+                onClick={handleClickOpen}
+              >
+                <Paper
+                  elevation={3}
+                  sx={{
+                    borderRadius: "50%",
+                    height: 20,
+                    width: 20,
+                    padding: 1,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <GridAddIcon />
+                </Paper>
+              </IconButton>
+              <SimpleDialog
+                selectedValue={selectedValue}
+                open={open}
+                onClose={handleClose}
+              />
+            </Box>
+            <DataTable />
+          </Box>
+        ) : (
+          <SearchComponent setIsTableVisible={setIsTableVisible}/>
+        )}
       </header>
     </div>
   );
