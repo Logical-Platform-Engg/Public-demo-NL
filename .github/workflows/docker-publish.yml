@@ -1,0 +1,33 @@
+name: Push to GCR
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  push_to_gcr:
+    runs-on: ubuntu-latest
+    env:
+      GCP_PROJECT_ID: united-electron-414109
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@master
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          project_id: ${{ env.GCP_PROJECT_ID }}
+
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker
+
+      - name: Build and push Docker image
+        run: |
+          pwd
+          # docker build -f app/frontend.Dockerfile -t gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image .
+          # docker build -f backend.Dockerfile -t gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image .
+          # docker push gcr.io/${{ env.GCP_PROJECT_ID }}/image-name:latest
+        working-directory: app
