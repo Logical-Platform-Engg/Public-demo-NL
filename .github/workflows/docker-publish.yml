@@ -12,7 +12,7 @@ jobs:
       GCP_PROJECT_ID: united-electron-414109
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # - name: Set up Google Cloud SDK
       #   uses: 'google-github-actions/setup-gcloud@v2' 
@@ -21,7 +21,7 @@ jobs:
       #     project_id: ${{ env.GCP_PROJECT_ID }}
 
       - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@master
+        uses: 'google-github-actions/setup-gcloud@v2'
         with:
           project_id: ${{ env.GCP_PROJECT_ID }}
           skip_install: true
