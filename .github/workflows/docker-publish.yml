@@ -26,8 +26,18 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          pwd
-          # docker build -f app/frontend.Dockerfile -t gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image .
-          # docker build -f backend.Dockerfile -t gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image .
-          # docker push gcr.io/${{ env.GCP_PROJECT_ID }}/image-name:latest
+          # Check if frontend-image exists locally
+          if docker images | grep -q "gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image"; then
+              docker rmi gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image
+          fi
+          
+          # Check if backend-image exists locally
+          if docker images | grep -q "gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image"; then
+              docker rmi gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image
+          fi
+          
+          docker build -f frontend.Dockerfile -t gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image .
+          docker build -f backend.Dockerfile -t gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image .
+          docker push gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image
+          docker push gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image
         working-directory: app
