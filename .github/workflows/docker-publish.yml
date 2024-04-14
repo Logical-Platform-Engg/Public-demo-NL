@@ -20,7 +20,6 @@ jobs:
       #     service_account_key: ${{ secrets.GCP_SA_KEY }}
       #     project_id: ${{ env.GCP_PROJECT_ID }}
 
-
       - name: Build and push Docker image
         run: |
           docker pull nginx:latest
