@@ -12,7 +12,7 @@ jobs:
       GCP_PROJECT_ID: united-electron-414109
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # - name: Set up Google Cloud SDK
       #   uses: 'google-github-actions/setup-gcloud@v2' 
@@ -21,7 +21,7 @@ jobs:
       #     project_id: ${{ env.GCP_PROJECT_ID }}
 
       - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@master
+        uses: 'google-github-actions/setup-gcloud@v2'
         with:
           project_id: ${{ env.GCP_PROJECT_ID }}
           skip_install: true
@@ -38,17 +38,19 @@ jobs:
       - name: Build and push Docker image
         run: |
           # Check if frontend-image exists locally
-          if docker images | grep -q "gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image"; then
-              docker rmi gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image
-          fi
+          # if docker images | grep -q "gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image"; then
+          #     docker rmi gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image
+          # fi
           
-          # Check if backend-image exists locally
-          if docker images | grep -q "gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image"; then
-              docker rmi gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image
-          fi
-          
-          docker build -f frontend.Dockerfile -t gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image .
-          docker build -f backend.Dockerfile -t gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image .
-          docker push gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image
-          docker push gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image
+          # # Check if backend-image exists locally
+          # if docker images | grep -q "gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image"; then
+          #     docker rmi gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image
+          # fi
+          docker pull nginx:latest
+          docker tag nginx:latest gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image:latest
+          docker push gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image:latest
+          # docker build -f frontend.Dockerfile -t gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image .
+          # docker build -f backend.Dockerfile -t gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image .
+          # docker push gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image
+          # docker push gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image
         working-directory: app
