@@ -1,4 +1,4 @@
-name: Pipeline Testing and Building
+name: pipeline testing and building
 
 on:
   push:
@@ -10,8 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      - name: Print GIT SHA Test
-        run: |
-          echo "${{ github.sha }}"
+      - name: Print Shortened Git SHA
+        run: echo "${{ github.sha:0:7 }}"
