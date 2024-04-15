@@ -13,7 +13,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: print GIT SHA
+      - name: print GIT SHA test
         run: |
           echo "${GITHUB_SHA}"
         
