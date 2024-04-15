@@ -14,53 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # - name: Set up Google Cloud SDK
-      #   uses: 'google-github-actions/setup-gcloud@v2' 
-      #   with:
-      #     service_account_key: ${{ secrets.GCP_SA_KEY }}
-      #     project_id: ${{ env.GCP_PROJECT_ID }}
-
-      # - id: 'auth'
-      #   uses: 'google-github-actions/auth@v2'
-      #   with:
-      #     credentials_json: '${{ secrets.GCP_SA_KEY2 }}'
-  
-      # - name: 'Set up Cloud SDK'
-      #   uses: 'google-github-actions/setup-gcloud@v2'
-      
-      # - name: 'Use gcloud CLI'
-      #   run: 'gcloud info'
-
-      # - name: Configure Docker
-      #   run: |
-      #     gcloud auth configure-docker
-
-      # - name: Build and push Docker image
-      #   run: |
-      #     # Check if frontend-image exists locally
-      #     # if docker images | grep -q "gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image"; then
-      #     #     docker rmi gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image
-      #     # fi
-          
-      #     # # Check if backend-image exists locally
-      #     # if docker images | grep -q "gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image"; then
-      #     #     docker rmi gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image
-      #     # fi
-      #     docker pull nginx:latest
-      #     docker tag nginx:latest gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image:latest
-      #     docker push gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image:latest
-      #     # docker build -f frontend.Dockerfile -t gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image .
-      #     # docker build -f backend.Dockerfile -t gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image .
-      #     # docker push gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image
-      #     # docker push gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image
-      #   working-directory: app
-
-      - name: Set up Google Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v2'
         with:
-          service_account_key: ${{ secrets.GCP_SA_KEY2 }}
-          project_id: ${{ env.GCP_PROJECT_ID }}
-          export_default_credentials: true
-
-      - name: 'Use gcloud CLI'
-        run: 'gcloud info'
+          credentials_json: '${{ secrets.GCP_SA_KEY2 }}'
