@@ -20,17 +20,16 @@ jobs:
       #     service_account_key: ${{ secrets.GCP_SA_KEY }}
       #     project_id: ${{ env.GCP_PROJECT_ID }}
 
-      - name: Build and push Docker image
-        run: |
-          docker pull nginx:latest
-          
-      - uses: RafikFarhad/push-to-gcr-github-action@v5-rc1
+      - id: 'auth'
+        uses: 'google-github-actions/auth@v2'
         with:
-          gcloud_service_key: ${{ secrets.GCP_SA_KEY }}
-          registry: gcr.io
-          project_id: ${{ env.GCP_PROJECT_ID }}
-          image_name: nginx
-          image_tag: latest
+          credentials_json: '${{ secrets.GCP_SA_KEY2 }}'
+  
+      - name: 'Set up Cloud SDK'
+        uses: 'google-github-actions/setup-gcloud@v2'
+  
+      - name: 'Use gcloud CLI'
+        run: 'gcloud info'
 
       # - name: Configure Docker
       #   run: |
