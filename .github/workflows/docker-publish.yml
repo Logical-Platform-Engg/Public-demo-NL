@@ -30,6 +30,17 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker pull nginx:latest
-          docker tag nginx:latest gcr.io/${{ env.GCP_PROJECT_ID }}/test-image:latest
-          docker push gcr.io/${{ env.GCP_PROJECT_ID }}/test-image:latest
+          # Check if frontend-image exists locally
+          if docker images | grep -q "gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image"; then
+              docker rmi gcr.io/${{ env.GCP_PROJECT_ID }}/frontend:${GITHUB_SHA:0:7}
+          fi
+          
+          # Check if backend-image exists locally
+          if docker images | grep -q "gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image"; then
+              docker rmi gcr.io/${{ env.GCP_PROJECT_ID }}/backend:${GITHUB_SHA:0:7}
+          fi
+          docker build -f frontend.Dockerfile -t gcr.io/${{ env.GCP_PROJECT_ID }}/frontend:${GITHUB_SHA:0:7} .
+          docker build -f backend.Dockerfile -t gcr.io/${{ env.GCP_PROJECT_ID }}/backend:${GITHUB_SHA:0:7} .
+          docker push gcr.io/${{ env.GCP_PROJECT_ID }}/frontend-image
+          docker push gcr.io/${{ env.GCP_PROJECT_ID }}/backend-image
+        working-directory: app
