@@ -1,19 +1,17 @@
-name: pipeline testing and building
+name: Pipeline Testing and Building
 
 on:
   push:
     branches:
       - pbuild
 
-
 jobs:
   pbuild:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v2
 
-      - name: print GIT SHA test
+      - name: Print GIT SHA Test
         run: |
-          echo "${GITHUB_SHA}"
-        
+          echo "${{ github.sha }}"
