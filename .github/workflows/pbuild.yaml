@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - pbuild
+    paths:
+      - 'app/backend/**'
+      - 'app/frontend/**'
 
 jobs:
   pbuild:
