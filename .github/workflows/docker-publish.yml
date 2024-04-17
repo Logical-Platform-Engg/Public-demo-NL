@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - dev
+    paths:
+      - 'app/backend/**'
+      - 'app/frontend/**'
 
 jobs:
   push_to_gcr:
