@@ -11,11 +11,7 @@ variable "google_credentials" {
 variable "project" {}
 
 resource "google_storage_bucket" "example_bucket" {
-  name          = "example-bucket-${random_id.example.hex}"
+  name          = "example-bucket"
   location      = "US"
   force_destroy = true
-}
-
-resource "random_id" "example" {
-  byte_length = 8
 }
