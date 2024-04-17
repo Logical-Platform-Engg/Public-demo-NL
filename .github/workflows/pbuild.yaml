@@ -39,14 +39,13 @@ jobs:
         with:
           terraform_version: '1.1.0'
 
-      - name: Initialize Terraform backend
-        run: terraform init -backend-config="bucket=my-project-bucket-test-test" -backend-config="prefix=terraform/state"
-
       - name: Terraform Init
         run: terraform init
+        working-directory: tftest
 
       - name: Terraform Plan
         run: terraform plan
+        working-directory: tftest
 
       - name: Terraform Apply or Destroy
         run: |
@@ -55,3 +54,10 @@ jobs:
           else
             terraform apply -auto-approve
           fi
+        working-directory: tftest
+
+      - name: Upload Terraform files
+        uses: actions/upload-artifact@v2
+        with:
+          name: terraform-files
+          path: tftest/*
