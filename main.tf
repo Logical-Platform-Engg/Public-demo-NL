@@ -1,10 +1,12 @@
 provider "google" {
-  credentials = jsondecode(var.google_credentials)
+  credentials = var.google_credentials
   project     = var.project
   region      = "us-central1"
 }
 
-variable "google_credentials" {}
+variable "google_credentials" {
+  type = string  
+}
 
 variable "project" {}
 
