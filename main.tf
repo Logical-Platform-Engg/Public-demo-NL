@@ -11,7 +11,7 @@ variable "google_credentials" {
 variable "project" {}
 
 resource "google_storage_bucket" "example_bucket" {
-  name          = "example-bucket"
+  name          = "example-bucket-netlogic"
   location      = "US"
   force_destroy = true
 }
