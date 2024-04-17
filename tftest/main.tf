@@ -9,7 +9,7 @@ provider "google" {
   project     = var.project
   region      = "us-central1"
 }
-
+//test again
 terraform {
   backend "gcs" {
     bucket = "my-project-bucket-test-test"
