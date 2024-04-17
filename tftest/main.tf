@@ -10,6 +10,13 @@ provider "google" {
   region      = "us-central1"
 }
 
+terraform {
+  backend "gcs" {
+    bucket = "my-project-bucket-test-test"
+    prefix = "tf-demo/workspace"
+  }
+}
+
 # Define resources
 resource "google_storage_bucket" "example_bucket" {
   name          = "example-bucket-netlogic-test"
