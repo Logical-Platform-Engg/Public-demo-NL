@@ -12,7 +12,7 @@ provider "google" {
 
 # Define resources
 resource "google_storage_bucket" "example_bucket" {
-  name          = "example-bucket-netlogic"
+  name          = "example-bucket-netlogic-test"
   location      = "US"
   force_destroy = true
 }
