@@ -10,7 +10,7 @@ on:
       destroy:
         description: 'Set to true to destroy infrastructure'
         required: false
-        default: 'false'
+        default: 'true'
 
 jobs:
   terraform_test:
