@@ -18,7 +18,7 @@ jobs:
     env:
       TF_VAR_project: united-electron-414109
       TF_VAR_google_credentials: ${{ secrets.GCP_SA_KEY2 }}
-      delete: true
+      delete: false
 
     steps:
       - name: Checkout code
