@@ -1,4 +1,4 @@
-const axios = require('axios')
+const axios = require('axios');
 
 const triggerWorkflow = async (metadata, github_token) => {
     //console.log(github_token)
@@ -37,4 +37,7 @@ const triggerWorkflow = async (metadata, github_token) => {
     }
 };
 
-exports.triggerWorkflow = triggerWorkflow
+
+
+
+module.exports = { triggerWorkflow};

@@ -1,30 +1,97 @@
 const express = require('express');
-const { triggerWorkflow } = require('./functions/feature');
+const { spawn } = require('child_process');
+const fs = require('fs');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+
 const app = express();
-const port = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000;
+app.use(cors());
+app.use(bodyParser.json());
 
-// Define a route
-app.use(express.json());
+// Handle Terraform actions
+app.post('/terraform', (req, res) => {
+  console.log(req.body);
 
-app.get('/trigger',async (req, res) => {
-  // console.log('triggering github pipeline' , req.body)
-  metadata = {
-    "environment": "dev",
-    "github_owner" : "semii404",
-    "github_repo" : "test-pipe",
-    "branch" : "dev",
-    "workflow_file" : "post.yaml",
-    "variables" : req.body
-  }
-  const result = await triggerWorkflow(metadata, process.env.github_token);
-  res.send(result);
+  // Write the request body to config.json
+  fs.writeFile('config.json', JSON.stringify(req.body, null, 2), (error) => {
+    if (error) {
+      console.error('Error writing JSON data to file:', error);
+      return res.status(500).json({ error: 'Error saving JSON data to file' });
+    }
+    console.log('JSON data saved to config.json');
+  });
+
+  const terraformInit = spawn('terraform', ['init']);
+
+  terraformInit.stdout.on('data', (data) => {
+    console.log(`terraform init: ${data}`);
+  });
+
+  terraformInit.stderr.on('data', (data) => {
+    console.error(`terraform init error: ${data}`);
+  });
+
+  terraformInit.on('close', (code) => {
+    if (code !== 0) {
+      return res.status(500).json({ error: 'Terraform init failed' });
+    }
+
+    const terraformPlan = spawn('terraform', ['plan']);
+
+    terraformPlan.stdout.on('data', (data) => {
+      console.log(`terraform plan: ${data}`);
+    });
+
+    terraformPlan.stderr.on('data', (data) => {
+      console.error(`terraform plan error: ${data}`);
+    });
+
+    terraformPlan.on('close', (code) => {
+      if (code !== 0) {
+        return res.status(500).json({ error: 'Terraform plan failed' });
+      }
+
+      const terraformApply = spawn('terraform', ['apply', '--auto-approve']);
+
+      terraformApply.stdout.on('data', (data) => {
+        console.log(`terraform apply: ${data}`);
+      });
+
+      terraformApply.stderr.on('data', (data) => {
+        console.error(`terraform apply error: ${data}`);
+      });
+
+      terraformApply.on('close', (code) => {
+        if (code !== 0) {
+          return res.status(500).json({ error: 'Terraform apply failed' });
+        }
+        res.json({ message: 'Terraform apply successful' });
+      });
+    });
+  });
 });
 
+// Handle Terraform destroy action
+app.post('/tfdestroy', (req, res) => {
+  const terraformDestroy = spawn('terraform', ['destroy', '--auto-approve']);
 
-app.get('/', (req, res) => {
-  res.send('Hello from the Express backend!');
+  terraformDestroy.stdout.on('data', (data) => {
+    console.log(`terraform destroy: ${data}`);
+  });
+
+  terraformDestroy.stderr.on('data', (data) => {
+    console.error(`terraform destroy error: ${data}`);
+  });
+
+  terraformDestroy.on('close', (code) => {
+    if (code !== 0) {
+      return res.status(500).json({ error: 'Terraform destroy failed' });
+    }
+    res.json({ message: 'Terraform destroy successful' });
+  });
 });
-// Start the server
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
 });
