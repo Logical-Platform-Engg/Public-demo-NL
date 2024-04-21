@@ -9,6 +9,8 @@ import * as React from "react";
 import SimpleDialog from "./components/dialog";
 import SearchComponent from "./components/SearchComponent";
 
+import logo from './images/logo.jpg';
+
 function App() {
   const [open, setOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState();
@@ -26,6 +28,10 @@ function App() {
 
   return (
     <div className="App">
+    <img src={logo} alt="Netlogic Logo" style={{height:"100px",width:"100px",position:"fixed", left:15, top:15}}/>
+      <Box sx={{position:"fixed", right:20, bottom:5}}>
+        <p>© 2024 All rights reserved.</p>
+      </Box>
       <header className="App-header">
         <Box
           sx={{
