@@ -6,13 +6,18 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
-import { Box } from "@mui/material";
-const SearchComponent = ({ setIsTableVisible }) => {
-  const [value, setValue] = React.useState();
-  const [region, setRegion] = React.useState("");
-  const [zone, setZone] = React.useState("");
-  const [config, setConfig] = React.useState("");
+import { Alert, Box } from "@mui/material";
+const SearchComponent = ({ setIsTableVisible, selectedVal }) => {
+  const [value, setValue] = useState();
+  const [instanceName, setInstanceName] = useState("");
+  const [region, setRegion] = useState("");
+  const [zone, setZone] = useState("");
+  const [config, setConfig] = useState("");
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
+
+  const handleInstanceNameChange = (event) => {
+    setInstanceName(event.target.value);
+  };
 
   const handleRegionChange = (event) => {
     setRegion(event.target.value);
@@ -27,16 +32,53 @@ const SearchComponent = ({ setIsTableVisible }) => {
     setValue(newValue);
     setShowAdditionalFields(true);
   };
+
+  const handleSubmit = async () => {
+    var dataVal = {
+      owner: selectedVal,
+      instance_name: instanceName,
+      region: region,
+      zone: zone,
+      config: config,
+    };
+
+    try {
+      console.log("Hi, Hello");
+      const response = await fetch("http://localhost:3500/insert", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dataVal),
+      });
+      console.log("Hi, Hello 2");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      console.log("Success:", result);
+
+      // Show the table or perform other actions
+      setIsTableVisible(true);
+    } catch (error) {
+      Alert("error");
+      console.error("Error:", error);
+    }
+  };
+
   return (
-    <Box sx={{
-        height:"100%",
-        width:"100%",
-        display:"flex",
-        flexDirection:"column",
-        justifyContent:"start",
-        marginTop:12,
-        gap:4,
-    }}>
+    <Box
+      sx={{
+        height: "100%",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "start",
+        marginTop: 12,
+        gap: 4,
+      }}
+    >
       <Autocomplete
         disablePortal
         value={value}
@@ -44,73 +86,81 @@ const SearchComponent = ({ setIsTableVisible }) => {
         id="services-search-box"
         options={services}
         sx={{ width: 300 }}
-        renderInput={(params) => <TextField {...params} label="Search (/) for resources" />}
+        renderInput={(params) => (
+          <TextField {...params} label="Search (/) for resources" />
+        )}
       />
       {showAdditionalFields && (
-        <Box sx={{
-            display:"flex",
-            flexDirection:"column",
-            width:"100%",
-            gap:2,
-        }}>
-          <TextField id="name" label="Instance Name" variant="outlined" fullWidth/>
-          <Box
+        <Box
           sx={{
             display: "flex",
+            flexDirection: "column",
             width: "100%",
-            alignItems: "center",
-            justifyContent: "center",
-            gap:2
+            gap: 2,
           }}
         >
-          <FormControl fullWidth>
-            <InputLabel id="region-select-label">Region</InputLabel>
-            <Select
-              labelId="region-select-label"
-              id="region-select"
-              value={region}
-              label="Region"
-              onChange={handleRegionChange}
-            >
-              <MenuItem value={10}>us-central1 (lowa)</MenuItem>
-            </Select>
-          </FormControl>
-          <FormControl fullWidth>
-            <InputLabel id="zone-select-label">Zone</InputLabel>
-            <Select
-              labelId="zone-select-label"
-              id="zone-select"
-              value={zone}
-              label="Zone"
-              onChange={handleZoneChange}
-            >
-              <MenuItem value={10}>us-central1-a</MenuItem>
-            </Select>
-          </FormControl>
+          <TextField
+            id="instance_name"
+            onChange={handleInstanceNameChange}
+            label="Instance Name"
+            variant="outlined"
+            fullWidth
+          />
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 2,
+            }}
+          >
+            <FormControl fullWidth>
+              <InputLabel id="region-select">Region</InputLabel>
+              <Select
+                labelId="region-select-label"
+                id="region-select"
+                value={region}
+                label="Region"
+                onChange={handleRegionChange}
+              >
+                <MenuItem value={"us-central1 (lowa)"}>
+                  us-central1 (lowa)
+                </MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl fullWidth>
+              <InputLabel id="zone-select">Zone</InputLabel>
+              <Select
+                labelId="zone-select-label"
+                id="zone-select"
+                value={zone}
+                label="Zone"
+                onChange={handleZoneChange}
+              >
+                <MenuItem value={"us-central1-a"}>us-central1-a</MenuItem>
+              </Select>
+            </FormControl>
           </Box>
           <FormControl fullWidth>
-            <InputLabel id="config-select-label">
-              Machine Configuration
-            </InputLabel>
+            <InputLabel id="config-select">Machine Configuration</InputLabel>
             <Select
-              labelId="config-select-label"
+              labelId="config-select"
               id="config-select"
               value={config}
               label="Machine Configuration"
               onChange={handleConfigChange}
             >
-              <MenuItem value={10}>E2</MenuItem>
-              <MenuItem value={10}>N2</MenuItem>
+              <MenuItem value={"E2"}>E2</MenuItem>
+              <MenuItem value={"N2"}>N2</MenuItem>
             </Select>
           </FormControl>
           <Button
             sx={{
-                width:"15%"
+              width: "15%",
             }}
             variant="contained"
-            onClick={() => {
-              setIsTableVisible(true);
-            }}
+            onClick={handleSubmit}
           >
             Create
           </Button>

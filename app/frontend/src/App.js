@@ -147,7 +147,7 @@ function App() {
             <DataTable />
           </Box>
         ) : (
-          <SearchComponent setIsTableVisible={setIsTableVisible}/>
+          <SearchComponent setIsTableVisible={setIsTableVisible} selectedVal={selectedValue}/>
         )}
       </header>
     </div>

@@ -1,48 +1,47 @@
 import * as React from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Typography } from "@mui/material";
-
-const columns = [
-  { field: "id", headerName: "ID", width: 70 },
-  { field: "name", headerName: "Name", width: 130 },
-  { field: "owner", headerName: "Owner", width: 130 },
-  {
-    field: "age",
-    headerName: "Age",
-    type: "number",
-    width: 90,
-  },
-  {
-    field: "cost",
-    headerName: "Cost",
-    description: "This column has a value getter and is not sortable.",
-    /* sortable: false, */
-    width: 160,
-    /* valueGetter: (params) =>
-      `${params.row.firstName || ""} ${params.row.lastName || ""}`, */
-  },
-];
-
-const rows = [
-  { id: 1,name: "GCS" ,owner: "Jon", age: 5, cost: 750 },
-  { id: 2,name: "GCS" ,owner: "Cersei", age: 2, cost: 250 },
-  { id: 3,name: "GCS" ,owner: "Jaime", age: 4, cost: 250 },
-  { id: 4,name: "GCS" ,owner: "Arya", age: 6, cost: 450 },
-  { id: 5,name: "GCS" ,owner: "Daenerys", age: null, cost: 150 },
-  { id: 6,name: "GCS" ,owner: null, age: 1, cost: 50 },
-  { id: 7,name: "GCS" ,owner: "Ferrara", age: 4, cost: 550 },
-  { id: 8,name: "GCS" ,owner: "Rossini", age: 6, cost: 650 },
-  { id: 9,name: "GCS" ,owner: "Harvey", age: 3, cost: 350 },
-];
+import { Button, Typography } from "@mui/material";
+import { useState, useEffect } from "react";
 
 function DataTable() {
-  return (
+  const [rows, setRows] = useState([]);
+  const [isData, setisData] = useState(false);
+  const fetchData = async () => {
+    try {
+      // Make a GET request to the API
+      const response = await fetch("http://localhost:3500/getData", {
+        method: "POST",
+      });
+      // Parse the JSON response
+      const data = await response.json();
+      // Update the rows state with the fetched data
+      console.log(data);
+      setRows(data);
+      setisData(true);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const columns = [
+    { field: "id", headerName: "ID", width: 70 },
+    { field: "instance_name", headerName: "Instance Name", width: 130 },
+    { field: "owner", headerName: "Provider", width: 130 },
+    { field: "region", headerName: "Region", width: 130 },
+    { field: "zone", headerName: "Zone", width: 130 },
+    { field: "config", headerName: "Configuration", width: 130 },
+  ];
+  return isData ? (
     <div
       style={{
         height: 400,
         width: "100%",
         display: "flex",
-        flexDirection:"column",
+        flexDirection: "column",
         alignItems: "start",
       }}
     >
@@ -50,7 +49,8 @@ function DataTable() {
         Existing Sandboxes
       </Typography>
       <DataGrid
-        rows={rows}
+        rows={rows.map((row, index) => ({ ...row, id: index+1 }))}
+        getRowId={(row) => row.id}
         columns={columns}
         initialState={{
           pagination: {
@@ -58,9 +58,12 @@ function DataTable() {
           },
         }}
         pageSizeOptions={[2, 5, 10]}
-        /* checkboxSelection */
       />
     </div>
+  ) : (
+    <>
+      <Button onClick={fetchData}>Fetch Data</Button>
+    </>
   );
 }
 
