@@ -1,6 +1,6 @@
 variable "project_id" {
   description = "The ID of the Google Cloud project"
-  default = "united-electron-414109"
+  default = "networklogic01"
 }
 
 variable "region" {

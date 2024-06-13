@@ -2,8 +2,14 @@
 
 # dependencies
 **/node_modules/
+.terraform/
 /.pnp
 .pnp.js
+.env
+keys.json
+terraform.tfstate
+build/
+.terraform.lock.hcl
 
 # testing
 /coverage

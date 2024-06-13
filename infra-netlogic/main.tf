@@ -5,6 +5,18 @@ provider "google" {
   zone        = "us-central1-a"
 }
 
+terraform {
+  backend "gcs" {
+    bucket  = "demo-networklogic1"
+    prefix  = "networklogicinfra/state"
+  }
+}
+
+resource "null_resource" "build_and_push_backend" {
+  provisioner "local-exec" {
+    command = "bash ${path.module}/build_backend.sh"
+  }
+}
 
 resource "google_cloud_run_service" "frontend" {
   name     = "frontend-service"
@@ -37,6 +49,8 @@ resource "google_cloud_run_service" "backend" {
   name     = "backend-service"
   location = var.region
 
+  depends_on = [null_resource.build_and_push_backend]
+
   template {
     spec {
       containers {
@@ -62,7 +76,7 @@ resource "google_cloud_run_service" "backend" {
     command = "bash ${path.module}/build_frontend.sh"
     environment = {
       BACKEND_URL = google_cloud_run_service.backend.status[0].url
-      path_to_frontend = "${path.module}/netlogic_app/frontend"
+      path_to_frontend = "${path.module}/../app/frontend"
     }
   }
 }
