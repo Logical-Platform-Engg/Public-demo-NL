@@ -7,8 +7,8 @@ provider "google" {
 
 terraform {
   backend "gcs" {
-    bucket  = "demo-networklogic1"
-    prefix  = "networklogicinfra/state"
+    bucket  = "demo-nlpe1"
+    prefix  = "nlpe1-infra/state"
   }
 }
 
@@ -55,8 +55,11 @@ resource "google_cloud_run_service" "backend" {
     spec {
       containers {
         image = "gcr.io/${var.project_id}/backend-image"
-
-      }
+      # Define the port for the container
+        ports {
+          container_port = 5000  # Adjust the port as needed
+        }
+      }   
     }
 
     metadata {

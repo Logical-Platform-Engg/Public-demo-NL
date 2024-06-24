@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Typography } from "@mui/material";
 
@@ -8,41 +8,73 @@ const columns = [
   { field: "owner", headerName: "Owner", width: 130 },
   {
     field: "age",
-    headerName: "Age",
+    headerName: "Age (minutes)",
     type: "number",
-    width: 90,
+    width: 130,
   },
   {
     field: "cost",
-    headerName: "Cost",
+    headerName: "Cost ($)",
     description: "This column has a value getter and is not sortable.",
-    /* sortable: false, */
-    width: 160,
-    /* valueGetter: (params) =>
-      `${params.row.firstName || ""} ${params.row.lastName || ""}`, */
+    width: 130,
   },
 ];
 
-const rows = [
-  { id: 1,name: "GCS" ,owner: "Jon", age: 5, cost: 750 },
-  { id: 2,name: "GCS" ,owner: "Cersei", age: 2, cost: 250 },
-  { id: 3,name: "GCS" ,owner: "Jaime", age: 4, cost: 250 },
-  { id: 4,name: "GCS" ,owner: "Arya", age: 6, cost: 450 },
-  { id: 5,name: "GCS" ,owner: "Daenerys", age: null, cost: 150 },
-  { id: 6,name: "GCS" ,owner: null, age: 1, cost: 50 },
-  { id: 7,name: "GCS" ,owner: "Ferrara", age: 4, cost: 550 },
-  { id: 8,name: "GCS" ,owner: "Rossini", age: 6, cost: 650 },
-  { id: 9,name: "GCS" ,owner: "Harvey", age: 3, cost: 350 },
-];
-
 function DataTable() {
+  const [rows, setRows] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      // Perform fetch request to your API endpoint
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/getdata`); // Adjust URL as per your API endpoint
+      console.log(response)
+      if (!response.ok) {
+        throw new Error('Failed to fetch data');
+      }
+      const data = await response.json();
+
+      // Map data to match table structure
+      const mappedData = data.map((item, index) => {
+        const creationTime = new Date(item.createdAt);
+        const currentTime = new Date();
+      
+        // Convert creationTime and currentTime to UTC
+        const creationTimeUTC = new Date(creationTime.getTime() + creationTime.getTimezoneOffset() * 60000);
+        const currentTimeUTC = new Date(currentTime.getTime() + currentTime.getTimezoneOffset() * 60000);
+  
+        // Calculate age in minutes using UTC timestamps
+        const ageInMinutes = Math.floor((currentTimeUTC - creationTimeUTC) / 60000);
+  
+        // Calculate cost based on age
+        const cost = (ageInMinutes * 0.05).toFixed(2); // $0.05 per minute
+  
+        return {
+          id: index + 1,
+          name: item.instance_name,
+          owner: item.owner,
+          age: ageInMinutes,
+          cost: cost,
+        };
+      });
+
+      setRows(mappedData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      // Handle error fetching data
+    }
+  };
+
   return (
     <div
       style={{
         height: 400,
         width: "100%",
         display: "flex",
-        flexDirection:"column",
+        flexDirection: "column",
         alignItems: "start",
       }}
     >
@@ -52,13 +84,9 @@ function DataTable() {
       <DataGrid
         rows={rows}
         columns={columns}
-        initialState={{
-          pagination: {
-            paginationModel: { page: 0, pageSize: 5 },
-          },
-        }}
-        pageSizeOptions={[2, 5, 10]}
-        /* checkboxSelection */
+        pageSize={5}
+        checkboxSelection
+        disableSelectionOnClick
       />
     </div>
   );

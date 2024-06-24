@@ -4,22 +4,27 @@
 
 provider "google" {
   credentials = file("keys.json")
-  project     = "united-electron-414109"
+  project     = "nlpe1-427015"
   region      = "us-central1"
 }
 
 
 
+variable "terraform_data" {
+  type = string
+}
+
 locals {
-  // Specify the path directly in the file function
-  inputs = jsondecode(file("config.json"))
+  decoded_data = jsondecode(var.terraform_data)
 }
 
 resource "google_compute_instance" "example_instance" {
-  name         = local.inputs.name
-  machine_type = local.inputs.machine_type
-  zone         = local.inputs.zone
-
+  name         = local.decoded_data["name"]
+  machine_type = local.decoded_data["machine_type"]
+  zone         = local.decoded_data["zone"]
+  metadata = {
+    owner = local.decoded_data["owner"]
+  }
   boot_disk {
     initialize_params {
       image = "debian-cloud/debian-10"  // Hardcoded boot disk image

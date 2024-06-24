@@ -18,6 +18,7 @@ const SearchComponent = ({ setIsTableVisible }) => {
   const [machine_type, setmachine_type] = useState("");
   const [showAdditionalFields, setShowAdditionalFields] = useState(false);
   const [name, setname] = useState("");
+  const [owner, setOwner] = useState("");
   const [loading, setLoading] = useState(false);
   const [notification, setNotification] = useState({ open: false, message: "", severity: "success" });
 
@@ -32,6 +33,9 @@ const SearchComponent = ({ setIsTableVisible }) => {
   const handleConfigChange = (event) => {
     setmachine_type(event.target.value);
   };
+  // const handleOwnerChange = (event) => {
+  //   setOwner(event.target.value);
+  // };
 
   const handleAutocompleteChange = (event, newValue) => {
     setValue(newValue);
@@ -41,6 +45,7 @@ const SearchComponent = ({ setIsTableVisible }) => {
   const handleSubmit = () => {
     // Prepare the data to be sent
     const data = {
+      owner,
       name,
       zone,
       machine_type,
@@ -69,6 +74,7 @@ const SearchComponent = ({ setIsTableVisible }) => {
       setNotification({ open: true, message: data.message || "Response received successfully", severity: "success" });
       setLoading(false);
       setIsTableVisible(true);
+      localStorage.setItem('res_details', JSON.stringify(data));
     })
     .catch(error => {
       console.error('Error:', error);
@@ -113,6 +119,15 @@ const SearchComponent = ({ setIsTableVisible }) => {
             gap: 2,
           }}
         >
+          <TextField
+            id="owner_name"
+            label="owner Name"
+            variant="outlined"
+            fullWidth
+            value={owner}
+            onChange={(e) => setOwner(e.target.value)}
+            disabled={loading}
+          />
           <TextField
             id="name"
             label="Instance Name"
