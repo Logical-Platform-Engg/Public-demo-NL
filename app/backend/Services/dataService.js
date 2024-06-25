@@ -47,6 +47,33 @@ const getData = async (req, res) => {
 };
 
 
+const deleteData = async (req,res)=>{
+  let { _id } = req.body;
+  console.log("Inside deleteData");
+  console.log(_id);
+  try {
+    console.log("Inside delete try");
+    const result = await dataMachine.findByIdAndDelete(_id);
+    if(result){
+        res.status(200).json({
+          status:200,
+          message: "Data Deleted Successfully !!",
+        });
+    } else {
+      res.status(404).json({
+        status: 404,
+        message: "Data not found !!",
+      });
+    }
+} catch(er){
+  console.error("Error deleting data:", error);
+  res.status(500).json({
+    status: 500,
+    message: "Internal Server Error",
+    error: error.message,
+  });
+}
+}
 
 const terraformrun = async (req, res)=> {
   try {
@@ -88,6 +115,7 @@ const terraformrun = async (req, res)=> {
 }
 
 const tfdestroy = async (req, res)=> {
+  console.log("Inside tfdestroy");
   try {
     // Run terraform init
     process.env.TF_VAR_terraform_data = JSON.stringify(req.body);
@@ -120,6 +148,7 @@ const tfdestroy = async (req, res)=> {
 module.exports = {
     insert,
     getData,
+    deleteData,
     terraformrun,
     tfdestroy
 };
