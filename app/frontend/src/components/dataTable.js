@@ -66,7 +66,7 @@ function DataTable() {
     };
     try {
       console.log("Hi, Hello");
-      const response = await fetch("http://localhost:5000/deleteData", {
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/deleteData`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -89,6 +89,7 @@ function DataTable() {
       console.error("Error:", error);
     }
   };
+
   const handleDelete = async (id, name, machine_type, zone, owner) => {
     var _id= id;
     var dataVal = {
