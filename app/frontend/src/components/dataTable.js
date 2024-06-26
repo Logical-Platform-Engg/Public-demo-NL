@@ -22,7 +22,7 @@ function DataTable() {
         throw new Error("Failed to fetch data");
       }
       const data = await response.json();
-
+      // console.log(data)
       // Map data to match table structure
       const mappedData = data.map((item, index) => {
         const creationTime = new Date(item.createdAt);
@@ -46,60 +46,32 @@ function DataTable() {
 
         return {
           id: index + 1,
+          _id: item._id,
           name: item.instance_name,
           owner: item.owner,
           age: ageInMinutes,
           cost: cost,
+          zone: item.zone,
+          machine_type:item.machine_type
         };
       });
 
       setRows(mappedData);
     } catch (error) {
       console.error("Error fetching data:", error);
-      // Handle error fetching data
-    }
-  };
-  
-  const deletefromDB = async (id) => {
-    var dataVal = {
-      _id: id,
-    };
-    try {
-      console.log("Hi, Hello");
-      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/deleteData`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataVal),
-      });
-      console.log("Hi, Hello 2");
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const result = await response.json();
-      console.log("Success:", result);
-
-      // Show the table or perform other actions
-      fetchData();
-    } catch (error) {
-      //Alert("error");
-      window.alert("error");
-      console.error("Error:", error);
     }
   };
 
-  const handleDelete = async (id, name, machine_type, zone, owner) => {
-    var _id= id;
-    var dataVal = {
-      name: name,
-      machine_type: machine_type,
-      zone: zone,
-      owner: owner,
+  const handleDelete = async (_id) => {
+    console.log(rows)
+    const row = rows.find(row => row._id === _id);
+    const dataVal = {
+      name: row.name,
+      machine_type: row.machine_type,
+      zone: row.zone,
+      owner: row.owner,
     };
     try {
-      console.log("Hi, Hello");
       const response = await fetch(
         `${process.env.REACT_APP_BACKEND_URL}/tfdestroy`,
         {
@@ -110,7 +82,6 @@ function DataTable() {
           body: JSON.stringify(dataVal),
         }
       );
-      console.log("Hi, Hello 2");
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
@@ -118,10 +89,7 @@ function DataTable() {
       const result = await response.json();
       console.log("Success:", result);
 
-      deletefromDB(_id);
-      // Show the table or perform other actions
     } catch (error) {
-      //Alert("error");
       window.alert("error");
       console.error("Error:", error);
     }
