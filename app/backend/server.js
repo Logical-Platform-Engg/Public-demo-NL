@@ -13,6 +13,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.use("/", userRoute);
+app.use('/api/sdks', require('./Routes/sdks'));
+
 // Handle Terraform actions
 // app.post('/terraform', (req, res) => {
 //   console.log(req.body);
