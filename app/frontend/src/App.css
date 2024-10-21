@@ -1,4 +1,36 @@
-.App {
+
+/* src/App.css */
+.login-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+  background-color: #f4f4f4;
+  border-radius: 10px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #6200ea;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #3700b3;
+}
+
+
+/* .App {
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -18,7 +50,6 @@
 }
 
 .App-header {
-  /* background-color: #282c34; */
   height: 60vh;
   width: 32vw;
   display: flex;
@@ -28,3 +59,4 @@
   justify-content: space-between;
   font-size: calc(10px + 2vmin);
 }
+ */
